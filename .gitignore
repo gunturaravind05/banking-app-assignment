@@ -1,0 +1,27 @@
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform.lock.hcl
+
+# Sensitive files
+terraform.tfvars
+
+# Python
+__pycache__/
+*.pyc
+
+# Mac
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Docker
+*.tar
