@@ -10,29 +10,22 @@ env:
 phases:
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR...
+      - echo Logging in to Amazon ECR
       - AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
       - ECR_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_URI
 
   build:
     commands:
-      - echo Building and pushing linux/amd64 image...
+      - echo Building and pushing linux/amd64 Docker image
       - cd app
       - docker buildx create --use || true
-      - docker buildx build \
-        --platform linux/amd64 \
-        -t $ECR_URI:latest \
-        --push .
+      - docker buildx build --platform linux/amd64 -t $ECR_URI:latest --push .
 
   post_build:
     commands:
-      - echo Restarting ECS service...
-      - aws ecs update-service \
-        --cluster $ECS_CLUSTER \
-        --service $ECS_SERVICE \
-        --force-new-deployment \
-        --region $AWS_REGION
+      - echo Restarting ECS service
+      - aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE --force-new-deployment --region $AWS_REGION
 
 artifacts:
   files:
