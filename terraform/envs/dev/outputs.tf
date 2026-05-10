@@ -57,3 +57,7 @@ output "pipeline_name" {
 output "github_connection_arn" {
   value = module.codepipeline.github_connection_arn
 }
+
+output "alerts_topic_arn" {
+  value = module.monitoring.alerts_topic_arn
+}

@@ -13,6 +13,8 @@ variable "ecr_repository_url" {}
 
 variable "db_endpoint" {}
 
+variable "db_password_secret_arn" {}
+
 variable "db_username" {
   default = "admin"
 }

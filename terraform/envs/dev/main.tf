@@ -67,6 +67,15 @@ module "rds" {
   db_password = var.db_password
 }
 
+module "secrets" {
+  source = "../../modules/secrets"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  db_password = var.db_password
+}
+
 module "ecs" {
   source = "../../modules/ecs"
 
@@ -81,6 +90,8 @@ module "ecs" {
   ecr_repository_url = module.ecr.repository_url
 
   db_endpoint = module.rds.db_endpoint
+
+  db_password_secret_arn = module.secrets.db_password_secret_arn
 
   db_password = var.db_password
 }
@@ -110,4 +121,19 @@ module "codepipeline" {
   github_branch = "main"
 
   codebuild_project_name = module.codebuild.codebuild_project_name
+}
+
+module "monitoring" {
+  source = "../../modules/monitoring"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  alb_arn_suffix          = module.alb.alb_arn_suffix
+  target_group_arn_suffix = module.alb.target_group_arn_suffix
+
+  ecs_cluster_name = module.ecs.ecs_cluster_name
+  ecs_service_name = "${var.project_name}-${var.environment}-service"
+
+  rds_identifier = module.rds.rds_identifier
 }

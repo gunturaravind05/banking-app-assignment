@@ -5,3 +5,7 @@ output "db_endpoint" {
 output "db_name" {
   value = aws_db_instance.this.db_name
 }
+
+output "rds_identifier" {
+  value = aws_db_instance.this.identifier
+}

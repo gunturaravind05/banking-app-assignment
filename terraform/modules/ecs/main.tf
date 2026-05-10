@@ -67,12 +67,15 @@ resource "aws_ecs_task_definition" "this" {
           value = var.db_username
         },
         {
-          name  = "DB_PASSWORD"
-          value = var.db_password
-        },
-        {
           name  = "DB_NAME"
           value = "bankdb"
+        }
+      ]
+
+      secrets = [
+        {
+          name      = "DB_PASSWORD"
+          valueFrom = var.db_password_secret_arn
         }
       ]
 
@@ -114,4 +117,22 @@ resource "aws_ecs_service" "this" {
   depends_on = [
     aws_iam_role_policy_attachment.ecs_task_execution_role_policy
   ]
+}
+
+resource "aws_iam_role_policy" "ecs_secrets_policy" {
+  name = "${var.project_name}-${var.environment}-ecs-secrets-policy"
+  role = aws_iam_role.ecs_task_execution_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "secretsmanager:GetSecretValue"
+        ]
+        Resource = var.db_password_secret_arn
+      }
+    ]
+  })
 }
