@@ -19,4 +19,4 @@ jobs:
       - name: Trigger CodeBuild
         run: |
           aws codebuild start-build \
-            --project-name banking-app-dev-codebuild
+            --project-name banking-app-dev-codebuild-v2
