@@ -18,6 +18,8 @@ phases:
   build:
     commands:
       - echo Building and pushing linux/amd64 Docker image
+      - git clone https://github.com/gunturaravind05/banking-app-assignment.git
+      - cd banking-app-assignment
       - cd app
       - docker buildx create --use || true
       - docker buildx build --platform linux/amd64 -t $ECR_URI:latest --push .
